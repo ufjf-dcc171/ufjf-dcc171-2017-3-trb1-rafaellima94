@@ -23,10 +23,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class ControlePedidos extends JFrame {
+    private List<Historico> dtHistorico = new ArrayList<>();
     private List<Mesas> dtMesas;
     private JList<Mesas> lstMesas = new JList<>(new DefaultListModel<>());
     private List<Itens> dtItens;
     private JList<Itens> lstItens = new JList<>(new DefaultListModel<>());
+    
+    private JButton btnHistorico = new JButton("Ver Histórico");
     
     private JLabel lblItem = new JLabel("Nome do item");
     private JTextField txtItem = new JTextField(10);
@@ -49,6 +52,10 @@ public class ControlePedidos extends JFrame {
         this.dtMesas = dtMesas;
         lstMesas.setModel(new MesasListModel(dtMesas));
         add(new JScrollPane(lstMesas), BorderLayout.WEST);
+        
+        JPanel controleHistorico = new JPanel(new GridLayout(1,1));
+        controleHistorico.add(btnHistorico);
+        add(controleHistorico, BorderLayout.NORTH);
         
         JPanel dadosPedidos = new JPanel(new GridLayout(9,1));
         dadosPedidos.add(lblItem);
@@ -103,9 +110,7 @@ public class ControlePedidos extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Mesas selMesa = lstMesas.getSelectedValue();
-                Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("Brazil/East"));
-                String horaAtual = cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE);
-                Pedidos pedido = new Pedidos(horaAtual);
+                Pedidos pedido = new Pedidos(getCurrentTime());
                 selMesa.setPedido(pedido);
                 dadosPedidos.setVisible(true);
                 controlePedidos.setVisible(false);
@@ -122,8 +127,14 @@ public class ControlePedidos extends JFrame {
                     Integer qtd = Integer.parseInt(txtQuantidade.getText());
                     double val = Double.parseDouble(txtValor.getText());
                     
+                    Mesas selMesa = lstMesas.getSelectedValue();
                     Itens item = new Itens(txtItem.getText(), qtd, val);
                     dtItens.add(item);
+                    selMesa.getPedido().setItens(dtItens);
+                    txtItem.setText("");
+                    txtQuantidade.setText("");
+                    txtValor.setText("");
+                    txtItem.requestFocus();
                     lstItens.clearSelection();
                     lstItens.updateUI();
                 }
@@ -145,28 +156,63 @@ public class ControlePedidos extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Mesas selMesa = lstMesas.getSelectedValue();
-                Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("Brazil/East"));
-                String horaAtual = cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE);
-                selMesa.getPedido().setHoraFechamento(horaAtual);
+                selMesa.getPedido().setHoraFechamento(getCurrentTime());
                 double valTotal = 0;
                 
                 StringBuilder s = new StringBuilder("<html><body><h1>Pedido fechado com sucesso!</h1>");
+                StringBuilder sb = new StringBuilder("Mesa: ");
+                sb.append(selMesa.getNum());
+                sb.append(System.getProperty("line.separator"));
+                sb.append("Horário de abertura: ");
+                sb.append(selMesa.getPedido().getHoraAbertura());
+                sb.append(System.getProperty("line.separator"));
+                sb.append("Horário de Fechamento: ");
+                sb.append(selMesa.getPedido().getHoraFechamento());
+                sb.append(System.getProperty("line.separator"));
                 for(Itens item : selMesa.getPedido().getItens()) {
                     valTotal += item.getValor()*item.getQuantidade();
                     s.append("<p>");
                     s.append(item);
                     s.append("</p>");
+                    sb.append(item);
+                    sb.append(" | ");
                 }
-                s.append("</br><p>Valor total: R$");
+                s.append("</br><p>Valor total: R$ ");
                 s.append(valTotal);
                 s.append("</p></body></html>");
                 
                 JOptionPane.showMessageDialog(null, s, "Fechamento", JOptionPane.INFORMATION_MESSAGE);
+                
+                sb.append(" Valor Total = R$ ");
+                sb.append(valTotal);
+                
+                Historico historico = new Historico(sb.toString());
+                dtHistorico.add(historico);
                 
                 selMesa.setPedido(new Pedidos());
                 dadosPedidos.setVisible(false);
                 controlePedidos.setVisible(true);
             }
         });
+        
+        btnHistorico.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StringBuilder s = new StringBuilder("Histórico");
+                s.append(System.getProperty("line.separator"));
+                
+                for(Historico historico : dtHistorico) {System.out.println(historico.getInformacoes());
+                    s.append(historico.getInformacoes());
+                s.append(System.getProperty("line.separator"));
+                }
+                
+                JOptionPane.showMessageDialog(null, s, "Fechamento", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+    }
+    
+    private String getCurrentTime() {
+        Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("Brazil/East"));
+        return cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.MONTH)+"/"+cal.get(Calendar.YEAR)+" "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE);
     }
 }

@@ -8,6 +8,10 @@ O sistema possui as mesas cadastradas. Cada mesa possui um número e uma comanda
 Quando uma comanda é fechada, os pedidos são salvos no histórico de vendas e a mesa é liberada para possuir uma nova comanda.
 As comandas possuem pedidos que são compostos pelo nome do prato ou bebida e a quantidade.
 
+O ponto que exigiu maior atenção e foi mais trabalhoso, foi conseguir exibir os diferenter itens de cada pedido de cada mesa.
+
 As melhorias que podem ser feitas são:
     - Interface mais amigável
     - Lista pré-definida de itens disponíveis
+    - Maior detalhamento para o histórico
+    - Verificação de dados inseridos
