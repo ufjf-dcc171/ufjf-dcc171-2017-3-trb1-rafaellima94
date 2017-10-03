@@ -51,19 +51,26 @@ public class ControlePedidos extends JFrame {
         
         this.dtMesas = dtMesas;
         lstMesas.setModel(new MesasListModel(dtMesas));
-        add(new JScrollPane(lstMesas), BorderLayout.WEST);
+        JPanel painel = new JPanel(new GridLayout(1,2));
+        painel.add(new JScrollPane(lstMesas));
         
         JPanel controleHistorico = new JPanel(new GridLayout(1,1));
         controleHistorico.add(btnHistorico);
         add(controleHistorico, BorderLayout.NORTH);
         
-        JPanel dadosPedidos = new JPanel(new GridLayout(9,1));
-        dadosPedidos.add(lblItem);
-        dadosPedidos.add(txtItem);
-        dadosPedidos.add(lblQuantidade);
-        dadosPedidos.add(txtQuantidade);
-        dadosPedidos.add(lblValor);
-        dadosPedidos.add(txtValor);
+        JPanel dadosPedidos = new JPanel(new GridLayout(6,1));
+        JPanel painelItens = new JPanel(new GridLayout(2,1));
+        painelItens.add(lblItem);
+        painelItens.add(txtItem);
+        dadosPedidos.add(painelItens);
+        JPanel painelQuantidade = new JPanel(new GridLayout(2,1));
+        painelQuantidade.add(lblQuantidade);
+        painelQuantidade.add(txtQuantidade);
+        dadosPedidos.add(painelQuantidade);
+        JPanel painelValor = new JPanel(new GridLayout(2,1));
+        painelValor.add(lblValor);
+        painelValor.add(txtValor);
+        dadosPedidos.add(painelValor);
         dadosPedidos.add(lblItens);
         dadosPedidos.add(scrollItens);
         JPanel controleItens = new JPanel(new GridLayout(1,3));
@@ -71,7 +78,8 @@ public class ControlePedidos extends JFrame {
         controleItens.add(btnNovoItem);
         controleItens.add(btnFecharPedido);
         dadosPedidos.add(controleItens);
-        add(dadosPedidos, BorderLayout.CENTER);
+        painel.add(dadosPedidos);
+        add(painel, BorderLayout.CENTER);
         
         JPanel controlePedidos = new JPanel(new GridLayout(1,1));
         controlePedidos.add(btnAbrirPedido);
