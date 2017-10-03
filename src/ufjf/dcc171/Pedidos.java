@@ -1,5 +1,6 @@
 package ufjf.dcc171;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,9 @@ public class Pedidos {
     
     public Pedidos(String horaAbertura) {
         this.horaAbertura = horaAbertura;
+    }
+    
+    public Pedidos() {
     }
 
     public String getHoraAbertura() {

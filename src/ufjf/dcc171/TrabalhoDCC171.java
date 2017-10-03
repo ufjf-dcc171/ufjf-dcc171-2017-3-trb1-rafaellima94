@@ -8,7 +8,7 @@ public class TrabalhoDCC171 {
     public static void main(String[] args) {
         List<Mesas> dados = getAllMesas();
         ControlePedidos controle = new ControlePedidos(dados);
-        controle.setSize(600, 500);
+        controle.setSize(800, 600);
         controle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         controle.setLocationRelativeTo(null);
         controle.setVisible(true);
@@ -22,9 +22,15 @@ public class TrabalhoDCC171 {
         }
         
         Mesas fullMesa = new Mesas(11);
-        Itens item = new Itens("Picanha", 2, 60.00);
+        Itens item1 = new Itens("Picanha", 2, 60.00);
+        Itens item2 = new Itens("Arroz", 1, 10.00);
+        Itens item3 = new Itens("Fritas", 4, 15.00);
+        Itens item4 = new Itens("Pizza", 7, 40.00);
         List<Itens> itens = new ArrayList<Itens>();
-        itens.add(item);
+        itens.add(item1);
+        itens.add(item2);
+        itens.add(item3);
+        itens.add(item4);
         Pedidos pedido = new Pedidos("10:10");
         pedido.setItens(itens);
         fullMesa.setPedido(pedido);
