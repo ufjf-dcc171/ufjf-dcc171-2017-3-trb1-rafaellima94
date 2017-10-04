@@ -8,7 +8,7 @@ public class TrabalhoDCC171 {
     public static void main(String[] args) {
         List<Mesas> dados = getAllMesas();
         ControlePedidos controle = new ControlePedidos(dados);
-        controle.setSize(800, 600);
+        controle.setSize(900, 600);
         controle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         controle.setLocationRelativeTo(null);
         controle.setVisible(true);

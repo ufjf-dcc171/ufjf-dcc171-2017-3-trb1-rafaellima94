@@ -41,6 +41,7 @@ public class ControlePedidos extends JFrame {
     private JScrollPane scrollItens = new JScrollPane();
     
     private JButton btnApagarItem = new JButton("Apagar item");
+    private JButton btnSalvarItem = new JButton("Salvar item");
     private JButton btnNovoItem = new JButton("Novo item");
     private JButton btnFecharPedido = new JButton("Fechar pedido");
     
@@ -74,8 +75,11 @@ public class ControlePedidos extends JFrame {
         dadosPedidos.add(lblItens);
         dadosPedidos.add(scrollItens);
         JPanel controleItens = new JPanel(new GridLayout(1,3));
-        controleItens.add(btnApagarItem);
         controleItens.add(btnNovoItem);
+        controleItens.add(btnSalvarItem);
+        btnSalvarItem.setEnabled(false);
+        controleItens.add(btnApagarItem);
+        btnApagarItem.setEnabled(false);
         controleItens.add(btnFecharPedido);
         dadosPedidos.add(controleItens);
         painel.add(dadosPedidos);
@@ -92,6 +96,8 @@ public class ControlePedidos extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 Mesas selMesa = lstMesas.getSelectedValue();
+                btnSalvarItem.setEnabled(false);
+                btnApagarItem.setEnabled(false);
                 
                 if(selMesa.getPedido() == null || selMesa.getPedido().getHoraAbertura() == null) {
                     dadosPedidos.setVisible(false);
@@ -111,6 +117,14 @@ public class ControlePedidos extends JFrame {
                     lstItens.setModel(new ItensListModel(dtItens));
                     scrollItens.setViewportView(lstItens);
                 }
+            }
+        });
+        
+        lstItens.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                btnSalvarItem.setEnabled(true);
+                btnApagarItem.setEnabled(true);
             }
         });
         
@@ -144,6 +158,18 @@ public class ControlePedidos extends JFrame {
                     txtValor.setText("");
                     txtItem.requestFocus();
                     lstItens.clearSelection();
+                    lstItens.updateUI();
+                }
+            }
+        });
+        
+        btnSalvarItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!lstItens.isSelectionEmpty() && (!txtItem.getText().isEmpty() || !txtQuantidade.getText().isEmpty() || !txtValor.getText().isEmpty())){
+                    lstItens.getSelectedValue().setNome(txtItem.getText());
+                    lstItens.getSelectedValue().setQuantidade(Integer.parseInt(txtQuantidade.getText()));
+                    lstItens.getSelectedValue().setValor(Double.parseDouble(txtValor.getText()));
                     lstItens.updateUI();
                 }
             }
